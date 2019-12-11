@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: zone-printer
+  labels:
+    app: zone-printer
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: zone-printer
+  template:
+    metadata:
+      labels:
+        app: zone-printer
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - zone-printer
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: frontend
+        image: gcr.io/google-samples/zone-printer:0.1
+        ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zone-printer
+  labels:
+    app: zone-printer
+  annotations:
+    cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
+spec:
+  type: NodePort
+  selector:
+    app: zone-printer
+  ports:
+  - name: zone-printer
+    port: 80
+---

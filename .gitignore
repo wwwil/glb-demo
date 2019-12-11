@@ -1,0 +1,10 @@
+# Ignore Terraform state, plan, and variable files
+**/.terraform
+*.tfstate
+*.tfstate.*
+*tfplan*
+*tfvars
+
+# Ignore GCP account keys
+keys.json
+account.json
