@@ -27,17 +27,19 @@ This is generally bad practise and Terraform should be set to use a service acco
 gcloud auth application-default login
 ```
 
-Complete web login in browser, then set the `GOOGLE_CLOUD_KEYFILE_JSON` environment variable to point to the credentials file created.
+Complete web login in browser, the command output should tell you the location of the credentials file with the message `Credentials saved to file:`.
+Then set the `GOOGLE_CLOUD_KEYFILE_JSON` environment variable to point to the credentials file created, for example:
 
 ```
-export GOOGLE_CLOUD_KEYFILE_JSON="/Users/wil/.config/gcloud/application_default_credentials.json"
+export GOOGLE_CLOUD_KEYFILE_JSON="/Users/wwwil/.config/gcloud/application_default_credentials.json"
 ```
 
 ## Step 01 - Create the Clusters
 
-Enter the `01-clusters/` directory and apply the Terraform files.
+Enter the `01-clusters/` directory, initialise Terraform, and apply the project files.
 
 ```
+terraform init
 terraform apply
 ```
 
@@ -113,9 +115,10 @@ sed -i.bak "s|HELLO_APP_NEG_US|$HELLO_APP_NEG_US|g" terraform.tfvars
 rm -f terraform.tfvars.bak
 ```
 
-Now apply the Terraform files.
+Now initialise Terraform, and apply the project files.
 
 ```
+terraform init
 terraform apply
 ```
 
@@ -162,6 +165,26 @@ Repeatedly using curl should cause the zone to change.
 The `zone-printer` is shown when visiting the global IP address directly as it is set as the default backend.
 Because of the URL Map we can also connect to the `hello-web` app by appending `/hello-app` in the browser.
 This should show the `Hello, world!` message.
+
+## Step 05 - Clean Up
+
+Once you've finished testing the load balancer you can clean up the resources.
+
+Enter the `03-glb` directory and run destroy the load balancer resources with Terraform.
+
+```
+terraform destroy
+```
+
+Verify the plan looks correct and enter 'yes' to proceed.
+
+Then enter the `01-clusters` directory and destroy the clusters with Terraform.
+
+```
+terraform destroy
+```
+
+Check the plan again and enter 'yes' to proceed.
 
 ## Apps
 
