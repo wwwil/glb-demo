@@ -2,8 +2,8 @@ resource "google_compute_global_address" "glb_demo" {
   name = "glb-demo"
 }
 
-resource "google_compute_global_forwarding_rule" "glb_demo" {
-  name                  = "glb-demo"
+resource "google_compute_global_forwarding_rule" "glb_demo_http" {
+  name                  = "glb-demo-http"
   ip_address            = google_compute_global_address.glb_demo.address
   port_range            = "80"
   target                = google_compute_target_http_proxy.glb_demo.self_link
@@ -14,6 +14,27 @@ resource "google_compute_target_http_proxy" "glb_demo" {
   name = "glb-demo"
 
   url_map = google_compute_url_map.glb_demo.self_link
+}
+
+resource "google_compute_global_forwarding_rule" "glb_demo_https" {
+  name                  = "glb-demo-https"
+  ip_address            = google_compute_global_address.glb_demo.address
+  port_range            = "443"
+  target                = google_compute_target_https_proxy.glb_demo.self_link
+  load_balancing_scheme = "EXTERNAL"
+}
+
+resource "google_compute_ssl_certificate" "glb_demo" {
+  name_prefix = "glb-demo-"
+  private_key = file("example.key")
+  certificate = file("example.crt")
+}
+
+resource "google_compute_target_https_proxy" "glb_demo" {
+  name = "glb-demo"
+
+  ssl_certificates = [google_compute_ssl_certificate.glb_demo.self_link]
+  url_map          = google_compute_url_map.glb_demo.self_link
 }
 
 resource "google_compute_url_map" "glb_demo" {
@@ -164,7 +185,7 @@ resource "google_compute_firewall" "glb_demo" {
 
 # This is a Cloud Armor policy
 resource "google_compute_security_policy" "glb_demo" {
-  name = "glb_demo"
+  name = "glb-demo"
 
   # Default rule, allow all traffic
   rule {

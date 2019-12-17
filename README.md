@@ -36,6 +36,8 @@ export GOOGLE_CLOUD_KEYFILE_JSON="/Users/wwwil/.config/gcloud/application_defaul
 
 ## Step 01 - Create the Clusters
 
+
+
 Enter the `01-clusters/` directory, initialise Terraform, and apply the project files.
 
 ```
@@ -115,6 +117,18 @@ sed -i.bak "s|HELLO_APP_NEG_US|$HELLO_APP_NEG_US|g" terraform.tfvars
 rm -f terraform.tfvars.bak
 ```
 
+To support HTTPS the load balancer needs an SSL certificate.
+This is provided to the load balancer HTTPS proxy using a GCP SSL certificate resource, created by Terraform from a certificate and key file.
+Generate a key and self signed certificate to use.
+
+```
+openssl genrsa -out example.key 2048
+openssl req -new -key example.key -out example.csr \
+    -subj "/CN=example.com"
+openssl x509 -req -days 365 -in example.csr -signkey example.key \
+    -out example.crt
+```
+
 Now initialise Terraform, and apply the project files.
 
 ```
@@ -134,7 +148,11 @@ The maximum rate for connections is set very low in the load balancer.
 this should mean that by aggressively refreshing the connection to the IP in the browser you should see the zone you connect to changes.
 This demonstrates the load balancing in effect.
 
-The region should not change, and should always be the region closest to where you connect from.
+To verify that HTTPS is working prefix the IP address with `https://`.
+This will likely show a warning that the certificate was not recognised as we are using a self signed certificate.
+Ignore the warning and proceed to the page anyway, it should show the `zone-printer` app.
+
+The region shown by `zone-printer` should not change, and should always be the region closest to where you connect from.
 To verify that the global load balancing is directing traffic correctly we can run `curl` from a remote machine in the other region.
 
 Connect to the cluster in the region you are not currently being served from.

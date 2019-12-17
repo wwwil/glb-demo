@@ -8,3 +8,8 @@
 # Ignore GCP account keys
 keys.json
 account.json
+
+# Ignore SSL keys, CSRs and certs
+*.key
+*.csr
+*.crt
