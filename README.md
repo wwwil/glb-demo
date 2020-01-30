@@ -1,8 +1,8 @@
 # glb-demo
 
-This is a demo of a container-native multi-cluster global load balancer, with Cloud Armor polices, for Google Cloud Platform (GCP).
+This is a demo of a container-native multi-cluster global load balancer, with Cloud Armor polices, for Google Cloud Platform (GCP) using Terraform.
 
-It is designed to accompany [this blog post]().
+It is designed to accompany a post on Jetstack's blog (coming soon).
 
 **This is a demo only.**
 It should not be used 'as is' in production, or any other shared, long lived, environments.
@@ -14,7 +14,6 @@ Many of the configurations and procedures used are not secure or robust.
 * The Google Cloud SDK (`gcloud` command)
 * `kubectl` command
 * `terraform` command, version `0.12.x`
-
 
 ## Step 00 - Auth
 
@@ -35,8 +34,6 @@ export GOOGLE_CLOUD_KEYFILE_JSON="/Users/wwwil/.config/gcloud/application_defaul
 ```
 
 ## Step 01 - Create the Clusters
-
-
 
 Enter the `01-clusters/` directory, initialise Terraform, and apply the project files.
 
