@@ -16,7 +16,7 @@ Many of the configurations and procedures used are not secure or robust.
 * `terraform` command, version `0.12.x`
 
 
-## Step 00 - Auth
+## Step 00 - Auth
 
 Ensure the `gcloud` command is up to date and logged in using the correct Google account and project.
 Then generate credentials for Terraform.
